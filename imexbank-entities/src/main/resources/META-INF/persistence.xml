@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+             https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+
+    <persistence-unit name="ImexBankPU" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- JTA Data Source configured in application server -->
+        <jta-data-source>java:jboss/datasources/ImexBankDS</jta-data-source>
+
+        <!-- Entity Classes -->
+        <class>com.imeth.imexbank.entities.Account</class>
+        <class>com.imeth.imexbank.entities.Customer</class>
+        <class>com.imeth.imexbank.entities.Transaction</class>
+        <class>com.imeth.imexbank.entities.ScheduledTask</class>
+        <class>com.imeth.imexbank.entities.InterestRate</class>
+        <class>com.imeth.imexbank.entities.AuditLog</class>
+        <class>com.imeth.imexbank.entities.User</class>
+
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+
+        <properties>
+            <!-- Hibernate Properties -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+
+            <!-- Schema Generation -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+
+            <!-- Connection Pool (managed by application server) -->
+            <property name="hibernate.connection.provider_class"
+                      value="org.hibernate.jbossas.JBossAppServerConnectionProvider"/>
+
+            <!-- Cache Configuration -->
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.cache.use_query_cache" value="true"/>
+            <property name="hibernate.cache.region.factory_class"
+                      value="org.hibernate.cache.jcache.JCacheRegionFactory"/>
+
+            <!-- Batch Processing -->
+            <property name="hibernate.jdbc.batch_size" value="25"/>
+            <property name="hibernate.order_inserts" value="true"/>
+            <property name="hibernate.order_updates" value="true"/>
+
+            <!-- Statistics -->
+            <property name="hibernate.generate_statistics" value="true"/>
+
+            <!-- Bean Validation -->
+            <property name="jakarta.persistence.validation.mode" value="AUTO"/>
+        </properties>
+    </persistence-unit>
+</persistence>

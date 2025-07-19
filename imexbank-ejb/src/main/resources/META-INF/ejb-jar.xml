@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+         https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd"
+         version="4.0">
+
+    <display-name>ImexBank EJB Module</display-name>
+
+    <enterprise-beans>
+        <!-- Define interceptor bindings -->
+        <interceptor-binding>
+            <ejb-name>*</ejb-name>
+            <interceptor-class>
+                com.imeth.imexbank.interceptors.LoggingInterceptor
+            </interceptor-class>
+        </interceptor-binding>
+
+        <interceptor-binding>
+            <ejb-name>*ServiceBean</ejb-name>
+            <interceptor-class>
+                com.imeth.imexbank.interceptors.PerformanceInterceptor
+            </interceptor-class>
+        </interceptor-binding>
+    </enterprise-beans>
+
+    <assembly-descriptor>
+        <!-- Security roles -->
+        <security-role>
+            <role-name>CUSTOMER</role-name>
+        </security-role>
+        <security-role>
+            <role-name>TELLER</role-name>
+        </security-role>
+        <security-role>
+            <role-name>MANAGER</role-name>
+        </security-role>
+        <security-role>
+            <role-name>ADMIN</role-name>
+        </security-role>
+        <security-role>
+            <role-name>AUDITOR</role-name>
+        </security-role>
+
+        <!-- Method permissions -->
+        <method-permission>
+            <role-name>CUSTOMER</role-name>
+            <role-name>TELLER</role-name>
+            <method>
+                <ejb-name>AccountServiceBean</ejb-name>
+                <method-name>getAccount</method-name>
+            </method>
+            <method>
+                <ejb-name>AccountServiceBean</ejb-name>
+                <method-name>getBalance</method-name>
+            </method>
+        </method-permission>
+
+        <method-permission>
+            <role-name>TELLER</role-name>
+            <role-name>MANAGER</role-name>
+            <method>
+                <ejb-name>AccountServiceBean</ejb-name>
+                <method-name>createAccount</method-name>
+            </method>
+            <method>
+                <ejb-name>AccountServiceBean</ejb-name>
+                <method-name>deposit</method-name>
+            </method>
+            <method>
+                <ejb-name>AccountServiceBean</ejb-name>
+                <method-name>withdraw</method-name>
+            </method>
+        </method-permission>
+
+        <method-permission>
+            <role-name>MANAGER</role-name>
+            <method>
+                <ejb-name>AccountServiceBean</ejb-name>
+                <method-name>activateAccount</method-name>
+            </method>
+            <method>
+                <ejb-name>AccountServiceBean</ejb-name>
+                <method-name>deactivateAccount</method-name>
+            </method>
+        </method-permission>
+    </assembly-descriptor>
+</ejb-jar>

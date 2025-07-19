@@ -1,16 +1,19 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: MATHIYA
-  Date: 7/19/2025
-  Time: 3:43 AM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Title</title>
+    <meta charset="UTF-8">
+    <title>Success - ImexBank</title>
+    <jsp:include page="/common/header.jsp"/>
 </head>
 <body>
-
+<div class="container mt-5">
+    <div class="alert alert-success">
+        <h2>Operation Successful</h2>
+        <p><%= request.getAttribute("successMessage") != null ? request.getAttribute("successMessage") : "Your operation was completed successfully." %></p>
+    </div>
+    <a href="${pageContext.request.contextPath}/dashboard.jsp" class="btn btn-primary">Go to Dashboard</a>
+</div>
+<jsp:include page="/common/footer.jsp"/>
 </body>
 </html>
