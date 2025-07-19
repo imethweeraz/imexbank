@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Security Configuration Placeholder
+
+  This file represents the conceptual location for security configuration.
+  In a real Jakarta EE application, this configuration is typically done
+  directly on the application server (e.g., WildFly, Payara, Open Liberty).
+
+  For example, in WildFly's `standalone.xml`, you would define a security
+  domain that uses the `CustomLoginModule`:
+
+  <subsystem xmlns="urn:jboss:domain:elytron:15.0">
+      ...
+      <security-domains>
+          <security-domain name="ImexBankRealm" default-realm="imexbank-jdbc-realm" permission-mapper="default-permission-mapper">
+              <realm name="imexbank-jdbc-realm"/>
+          </security-domain>
+      </security-domains>
+      <security-realms>
+          <jaas-realm name="imexbank-jaas-realm" login-module="com.imeth.imexbank.security.realm.CustomLoginModule"/>
+      </security-realms>
+      ...
+  </subsystem>
+
+  This XML is for documentation and project structure purposes only.
+-->
+<imexbank-security-configuration>
+    <realm name="ImexBankRealm">
+        <login-module>com.imeth.imexbank.security.realm.CustomLoginModule</login-module>
+    </realm>
+</imexbank-security-configuration>

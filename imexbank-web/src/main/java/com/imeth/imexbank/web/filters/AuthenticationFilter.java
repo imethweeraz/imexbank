@@ -17,73 +17,46 @@ import java.util.List;
 public class AuthenticationFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
-
-    private static final List<String> PUBLIC_PATHS = Arrays.asList(
-            "/login", "/logout", "/css/", "/js/", "/images/", "/error"
-    );
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        logger.info("Authentication filter initialized");
-    }
+    private static final List<String> PUBLIC_PATHS = Arrays.asList("/login", "/css/", "/js/", "/images/");
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         String path = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
 
-        // Check if path is public
+        // Allow access to public paths
         if (isPublicPath(path)) {
             chain.doFilter(request, response);
             return;
         }
 
-        // Check if user is authenticated
         HttpSession session = httpRequest.getSession(false);
-        boolean isAuthenticated = session != null &&
-                session.getAttribute(SecurityConstants.USER_SESSION_KEY) != null;
+        boolean isAuthenticated = (session != null && session.getAttribute(SecurityConstants.USER_SESSION_KEY) != null);
 
-        if (!isAuthenticated) {
-            logger.debug("Unauthenticated access attempt to: {}", path);
-
-            // Save requested URL
-            if (session != null) {
-                session.setAttribute("requestedUrl",
-                        httpRequest.getRequestURL().toString());
-            }
-
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
-            return;
+        if (isAuthenticated) {
+            // User is logged in, continue to the requested page
+            chain.doFilter(request, response);
+        } else {
+            // User is not logged in, redirect to the login page
+            logger.warn("Unauthenticated access attempt to protected path: {}", path);
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.jsp");
         }
-
-        // Check session timeout
-        Long loginTime = (Long) session.getAttribute(SecurityConstants.LOGIN_TIME_KEY);
-        if (loginTime != null) {
-            long sessionDuration = System.currentTimeMillis() - loginTime;
-            long maxDuration = SecurityConstants.SESSION_TIMEOUT_MINUTES * 60 * 1000;
-
-            if (sessionDuration > maxDuration) {
-                logger.info("Session timeout for user: {}",
-                        session.getAttribute(SecurityConstants.USER_SESSION_KEY));
-                session.invalidate();
-                httpResponse.sendRedirect(httpRequest.getContextPath() + "/login?timeout=true");
-                return;
-            }
-        }
-
-        chain.doFilter(request, response);
-    }
-
-    @Override
-    public void destroy() {
-        logger.info("Authentication filter destroyed");
     }
 
     private boolean isPublicPath(String path) {
         return PUBLIC_PATHS.stream().anyMatch(path::startsWith);
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        logger.info("AuthenticationFilter initialized.");
+    }
+
+    @Override
+    public void destroy() {
+        logger.info("AuthenticationFilter destroyed.");
     }
 }

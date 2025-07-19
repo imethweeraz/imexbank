@@ -10,11 +10,54 @@
     </parent>
 
     <artifactId>imexbank-ear</artifactId>
+    <packaging>ear</packaging>
 
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <name>ImexBank EAR</name>
+    <description>Enterprise Application Archive for ImexBank</description>
 
+    <dependencies>
+        <!-- EJB Module -->
+        <dependency>
+            <groupId>com.imeth.imexbank</groupId>
+            <artifactId>imexbank-ejb</artifactId>
+            <version>${project.version}</version>
+            <type>ejb</type>
+        </dependency>
+
+        <!-- Web Module -->
+        <dependency>
+            <groupId>com.imeth.imexbank</groupId>
+            <artifactId>imexbank-web</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+
+        <!-- Security and other library JARs can be included if needed at the EAR level -->
+        <!-- Note: common and entities are dependencies of ejb/web, so they are included transitively -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <version>9</version> <!-- Jakarta EE Version -->
+                    <displayName>ImexBank</displayName>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <modules>
+                        <!-- Explicitly define the web module and its context root -->
+                        <webModule>
+                            <groupId>com.imeth.imexbank</groupId>
+                            <artifactId>imexbank-web</artifactId>
+                            <!-- This sets the URL to http://server:port/imexbank -->
+                            <contextRoot>/imexbank</contextRoot>
+                        </webModule>
+                        <!-- The EJB module is included automatically -->
+                    </modules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

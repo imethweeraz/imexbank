@@ -7,17 +7,20 @@
     <display-name>ImexBank Web Application</display-name>
 
     <welcome-file-list>
+        <welcome-file>login.jsp</welcome-file>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
+    <!-- Session Configuration -->
     <session-config>
-        <session-timeout>30</session-timeout>
+        <session-timeout>30</session-timeout> <!-- 30 minutes -->
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
 
+    <!-- Error Page Configuration -->
     <error-page>
         <error-code>404</error-code>
-        <location>/error.jsp</location>
+        <location>/common/error.jsp</location>
     </error-page>
     <error-page>
         <error-code>403</error-code>
@@ -25,11 +28,11 @@
     </error-page>
     <error-page>
         <error-code>500</error-code>
-        <location>/error.jsp</location>
+        <location>/common/error.jsp</location>
     </error-page>
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
-        <location>/error.jsp</location>
+        <location>/common/error.jsp</location>
     </error-page>
 
 </web-app>
